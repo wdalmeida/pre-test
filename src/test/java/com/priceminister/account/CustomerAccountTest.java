@@ -7,6 +7,8 @@ import org.junit.*;
 
 import com.priceminister.account.implementation.*;
 
+import java.util.logging.Logger;
+
 
 /**
  * Please create the business code, starting from the unit tests below.
@@ -19,15 +21,18 @@ import com.priceminister.account.implementation.*;
  * 
  */
 public class CustomerAccountTest {
+
+    private final Logger logger = Logger.getLogger(CustomerAccountTest.class.getName());
     
-    Account customerAccount;
-    AccountRule rule;
+    private Account customerAccount;
+    private AccountRule rule;
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
+        logger.info("Setting Up CustomerAccount");
         customerAccount = new CustomerAccount();
     }
     
@@ -36,6 +41,8 @@ public class CustomerAccountTest {
      */
     @Test
     public void testAccountWithoutMoneyHasZeroBalance() {
+        logger.info("Start testAccountWithoutMoneyHasZeroBalance()");
+
         Double delta = 0.01;
 
         //When
@@ -49,9 +56,34 @@ public class CustomerAccountTest {
     /**
      * Adds money to the account and checks that the new balance is as expected.
      */
-    @Ignore
+    @Test
     public void testAddPositiveAmount() {
-        fail("not yet implemented");
+        logger.info("Start testAddPositiveAmount()");
+
+        Double delta = 0.01;
+        Double addedAmount = 20.9;
+        Double addAgain = 2.1;
+
+
+        //When
+        customerAccount.add(addedAmount);
+        logger.info("Add 20.9 to the balance");
+        Double result = customerAccount.getBalance();
+
+        //Verify
+        assertEquals(addedAmount,result,delta);
+        logger.info("Result should be "+ addedAmount);
+
+
+        //When
+        customerAccount.add(addAgain);
+        logger.info("Add 2.1 to the balance");
+        result = customerAccount.getBalance();
+
+        //Verify
+        assertEquals(addedAmount+addAgain,result,delta);
+        logger.info("Result should be "+ (addedAmount+addAgain) );
+
     }
     
     /**

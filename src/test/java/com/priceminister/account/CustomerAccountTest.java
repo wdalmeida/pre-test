@@ -8,8 +8,13 @@ import org.junit.Test;
 
 import java.util.logging.Logger;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.mock;
 
 
 /**
@@ -126,7 +131,6 @@ public class CustomerAccountTest {
     public void testWithdrawAndReportBalance() {
         logger.info("Start testWithdrawAndReportBalance()");
         Double addedAmount = 54.7;
-        Account spy = spy(customerAccount);
 
         //When
         when(rule.withdrawPermitted(addedAmount)).thenReturn(true);

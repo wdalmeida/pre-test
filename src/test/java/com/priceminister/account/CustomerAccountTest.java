@@ -29,7 +29,7 @@ import static org.mockito.Mockito.mock;
  */
 public class CustomerAccountTest {
 
-    private final Logger logger = Logger.getLogger(CustomerAccountTest.class.getName());
+    private static final Logger logger = Logger.getLogger(CustomerAccountTest.class.getName());
 
     private Account customerAccount;
     private AccountRule rule;

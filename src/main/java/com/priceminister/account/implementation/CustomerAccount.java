@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 public class CustomerAccount implements Account {
 
-    private final Logger logger = Logger.getLogger(CustomerAccount.class.getName());
+    private static final Logger logger = Logger.getLogger(CustomerAccount.class.getName());
 
     private Double balance;
 
@@ -29,8 +29,10 @@ public class CustomerAccount implements Account {
     public Double withdrawAndReportBalance(Double withdrawnAmount, AccountRule rule)
             throws IllegalBalanceException {
         if(rule.withdrawPermitted(this.balance+withdrawnAmount)){
+            logger.log(Level.INFO,"Withdraw allowed");
             add(withdrawnAmount);
         }else {
+            logger.log(Level.INFO,"Withdraw refused");
             throw new IllegalBalanceException(withdrawnAmount);
         }
         return this.balance;

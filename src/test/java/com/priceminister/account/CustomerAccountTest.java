@@ -1,41 +1,47 @@
 package com.priceminister.account;
 
 
-import static org.junit.Assert.*;
-
-import org.junit.*;
-
-import com.priceminister.account.implementation.*;
+import com.priceminister.account.implementation.CustomerAccount;
+import com.priceminister.account.implementation.CustomerAccountRule;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.logging.Logger;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 
 /**
  * Please create the business code, starting from the unit tests below.
  * Implement the first test, the develop the code that makes it pass.
  * Then focus on the second test, and so on.
- * 
+ *
  * We want to see how you "think code", and how you organize and structure a simple application.
- * 
+ *
  * When you are done, please zip the whole project (incl. source-code) and send it to recrutement-dev@priceminister.com
- * 
+ *
  */
 public class CustomerAccountTest {
 
     private final Logger logger = Logger.getLogger(CustomerAccountTest.class.getName());
-    
+
     private Account customerAccount;
     private AccountRule rule;
+
 
     /**
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        logger.info("Setting Up CustomerAccount");
+        logger.info("Start set up");
         customerAccount = new CustomerAccount();
+        rule = mock(CustomerAccountRule.class);
+        logger.info("End set up");
+
     }
-    
+
     /**
      * Tests that an empty account always has a balance of 0.0, not a NULL.
      */
@@ -51,8 +57,10 @@ public class CustomerAccountTest {
         //Verify
         assertNotNull(customerAccount);
         assertEquals(0.0,result,delta);
+        logger.info("End testAccountWithoutMoneyHasZeroBalance()");
+
     }
-    
+
     /**
      * Adds money to the account and checks that the new balance is as expected.
      */
@@ -84,17 +92,31 @@ public class CustomerAccountTest {
         assertEquals(addedAmount+addAgain,result,delta);
         logger.info("Result should be "+ (addedAmount+addAgain) );
 
+        logger.info("End testAddPositiveAmount()");
+
     }
-    
+
     /**
      * Tests that an illegal withdrawal throws the expected exception.
      * Use the logic contained in CustomerAccountRule; feel free to refactor the existing code.
      */
-    @Ignore
+    @Test
     public void testWithdrawAndReportBalanceIllegalBalance() {
-        fail("not yet implemented");
+        logger.info("Start testWithdrawAndReportBalanceIllegalBalance()");
+        Double addedAmount = -54.7;
+
+        //When
+        when(rule.withdrawPermitted(addedAmount)).thenReturn(false);
+        try {
+            customerAccount.withdrawAndReportBalance(addedAmount, rule);
+            fail("Test failed because of the method that hasn't thrown the exception");
+        } catch (IllegalBalanceException e) {
+            verify(rule,times(1)).withdrawPermitted(addedAmount);
+            assertEquals(e.toString(), "Illegal account balance: " + addedAmount);
+        }
+        logger.info("End testWithdrawAndReportBalanceIllegalBalance()");
     }
-    
+
     // Also implement missing unit tests for the above functionalities.
 
 }

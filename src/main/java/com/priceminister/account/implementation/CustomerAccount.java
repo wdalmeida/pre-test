@@ -28,8 +28,12 @@ public class CustomerAccount implements Account {
 
     public Double withdrawAndReportBalance(Double withdrawnAmount, AccountRule rule)
             throws IllegalBalanceException {
-        // TODO Auto-generated method stub
-        return null;
+        if(rule.withdrawPermitted(this.balance+withdrawnAmount)){
+            add(withdrawnAmount);
+        }else {
+            throw new IllegalBalanceException(withdrawnAmount);
+        }
+        return this.balance;
     }
 
 }

@@ -28,6 +28,7 @@ public class CustomerAccountTest {
 
     private Account customerAccount;
     private AccountRule rule;
+    private Double delta;
 
 
     /**
@@ -38,6 +39,7 @@ public class CustomerAccountTest {
         logger.info("Start set up");
         customerAccount = new CustomerAccount();
         rule = mock(CustomerAccountRule.class);
+        delta = 0.01;
         logger.info("End set up");
 
     }
@@ -49,7 +51,6 @@ public class CustomerAccountTest {
     public void testAccountWithoutMoneyHasZeroBalance() {
         logger.info("Start testAccountWithoutMoneyHasZeroBalance()");
 
-        Double delta = 0.01;
 
         //When
         Double result = customerAccount.getBalance();
@@ -68,7 +69,6 @@ public class CustomerAccountTest {
     public void testAddPositiveAmount() {
         logger.info("Start testAddPositiveAmount()");
 
-        Double delta = 0.01;
         Double addedAmount = 20.9;
         Double addAgain = 2.1;
 
@@ -118,5 +118,30 @@ public class CustomerAccountTest {
     }
 
     // Also implement missing unit tests for the above functionalities.
+
+    /**
+     * Tests that the withdraw amount is added to the balance.
+     */
+    @Test
+    public void testWithdrawAndReportBalance() {
+        logger.info("Start testWithdrawAndReportBalance()");
+        Double addedAmount = 54.7;
+        Account spy = spy(customerAccount);
+
+        //When
+        when(rule.withdrawPermitted(addedAmount)).thenReturn(true);
+
+        try {
+            Double result = customerAccount.withdrawAndReportBalance(addedAmount, rule);
+
+            //Verify
+            verify(rule,times(1)).withdrawPermitted(addedAmount);
+            assertEquals(addedAmount,result,delta);
+        } catch (IllegalBalanceException e) {
+            fail("Test failed because the exception was raised");
+
+        }
+        logger.info("End testWithdrawAndReportBalance()");
+    }
 
 }
